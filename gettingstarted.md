@@ -273,7 +273,7 @@ There are several sources of documentation:
 
 - **Readme's**  
   Every _aolib_ comes with documentation in the form of a `readme.md` 
-  in its root directory, e.g. `arduinoosp\aolibs\aospi\readme.md`.
+  in its root directory, e.g. `aospi\readme.md`.
   
   These readme's give a quick intro to that library, presents all 
   examples of the library, discusses the modules and their inter 
@@ -293,22 +293,22 @@ There are several sources of documentation:
   "File > Examples > OSP XxxxXxx aoxxx > ...".
   
   This ranges from simple software-only
-  [examples](https://github.com/ams-OSRAM/OSP_aoresult/tree/main/examples) 
+  [examples](https://github.com/ams-OSRAM/OSP_aoresult/tree/main?tab=readme-ov-file#examples) 
   (how to assert, how to print errors, how to compute CRC), using the 
-  [communications](https://github.com/ams-OSRAM/OSP_aospi/tree/main/examples) 
+  [communications](https://github.com/ams-OSRAM/OSP_aospi/tree/main?tab=readme-ov-file#examples) 
   layer (tx, rx, timing), trying 
-  [OSP features](https://github.com/ams-OSRAM/OSP_aoosp/tree/main/examples)
+  [OSP features](https://github.com/ams-OSRAM/OSP_aoosp/tree/main?tab=readme-ov-file#examples)
   (error behavior, grouping/multicast, I2C, OTP, SYNC, topology, clustering, serial cast), 
   demonstrating the 
-  [command interpreter](https://github.com/ams-OSRAM/OSP_aocmd/tree/main/examples) 
+  [command interpreter](https://github.com/ams-OSRAM/OSP_aocmd/tree/main?tab=readme-ov-file#examples) 
   (adding your own command), 
-  [middleware features](https://github.com/ams-OSRAM/OSP_aomw/tree/main/examples)
-  (topology manager, color management, I/O-expander driver, EEPROM driver, animation script),
-  using the OSP32 [user interface elements](https://github.com/ams-OSRAM/OSP_aoui32/tree/main/examples) 
+  [middleware features](https://github.com/ams-OSRAM/OSP_aomw/tree/main?tab=readme-ov-file#examples)
+  (topology manager, color management, I/O-expander driver, EEPROM driver, animation script), using the OSP32 
+  [user interface elements](https://github.com/ams-OSRAM/OSP_aoui32/tree/main?tab=readme-ov-file#examples) 
   (buttons, signaling LEDs, OLED), reusable 
-  [apps](https://github.com/ams-OSRAM/OSP_aoapps/tree/main/examples), 
+  [apps](https://github.com/ams-OSRAM/OSP_aoapps/tree/main?tab=readme-ov-file#examples), 
   and finally the official applications 
-  [saidbasic](examples/saidbasic) and [osplink](examples/osplink).
+  [saiddemo](examples/saiddemo), [saidbasic](examples/saidbasic) and [osplink](examples/osplink).
 
   The `readme.md` of every library shortly describes each example.
 
@@ -352,9 +352,12 @@ problems, these are the versions the _aolib_ developers used and tested
 (2025 March 28).
 
 - Arduino IDE 2.3.6.
-- Board manager "esp32 by Espressif Systems" 3.2.0.
+- Board manager "esp32 by Espressif Systems" 3.3.0.  
+  Unfortunately this library uses and old "Touch API" so a compile 
+  warns `This set of Touch APIs has been deprecated` in file 
+  `3.3.0\cores\esp32\esp32-hal-touch.c`.
 - No external libraries are used.
-- As PCB the OSP32 v10, SAIDbasic v7 and SAIDlooker v3.   
+- As PCB the OSP32 v11, SAIDbasic v7, SAIDsense v2,  and SAIDlooker v3.   
   Some SAIDs on the older boards are the v1.0 engineering samples 
   instead of the v1.1 production samples; see 
   [saidversions](extras/manuals/saidversions).
@@ -375,9 +378,9 @@ Depending on your needs pick a subset from the following set.
   
 - `aospi`  
   This library implements the 2-wire SPI communication ("MCU mode, type B")
-  needed to send telegrams to an OSP chain and receive responses from it. 
-  Sending and receiving is on the level of byte arrays (there is support
-  for "MCU mode type A" also).
+  needed to send telegrams to an OSP chain and receive responses from it
+  (there is support for "MCU mode type A" also). 
+  Sending and receiving is on the level of byte arrays.
   
   The application is responsible to ensure the buffer contains the OSP 
   preamble, the destination address, the payload size, the telegram ID, and 
@@ -388,8 +391,10 @@ Depending on your needs pick a subset from the following set.
   ("loop" and "bidir"). This library also has functions to control that mux.
   
   If you use a different protocol (e.g. 1-wire Manchester), a different MCU 
-  (e.g. NXP S32K144 instead of ESP32S3) or less flexibility (e.g. no 
-  BiDir/Loop with auto select), this library would be replaced.
+  (e.g. NXP S32K144 instead of ESP32S3), different HW blocks (e.g. not two SPI
+  but one, or other IO blocks), different PCB (e.g. no output disable) 
+  or less flexibility (e.g. no BiDir/Loop with auto select), this library 
+  would need to be replaced.
 
 - `aoosp`  
   This library implements OSP communication at telegram level 
@@ -412,9 +417,9 @@ Depending on your needs pick a subset from the following set.
   received.
   
   This library is useful in the evaluation kit because it offers human
-  interaction, either by direct typing in a terminal, or via a PC app that
-  gives commands via serial-over-USB. Production firmware images are 
-  not expected to use `aocmd`.
+  interaction, either by direct typing in a terminal, or via a PC app 
+  (e.g. a Python script) that gives commands via serial-over-USB. 
+  Production firmware images are not expected to use `aocmd`.
 
 - `aomw`  
   This library contains an assortment of software features. The most 
@@ -427,12 +432,14 @@ Depending on your needs pick a subset from the following set.
   ratios (PWM values for the three LEDs) in order to realize a specified 
   color, even over varying temperature.
   
-  The library also contains a driver for an I2C EEPROM and for an I2C 
-  I/O-expander; both these devices are used as example I2C devices connected 
-  to a SAID with I2C gateway enabled.
+  The library contains two other software-only modules. 
+  It has a module to "paint" country flags on an OSP chain, 
+  and an interpreter for scripted animation instructions.
   
-  The library also has a module to paint flags on an OSP chain, and 
-  an interpreter for scripted animation instructions.
+  The library also contains drivers for I2C devices, when they are connected 
+  to a SAID with I2C gateway enabled. Examples are a driver for an I2C EEPROM, 
+  for an I/O-expander, a magnetic rotary sensor, temperature sensor, ambient 
+  light sensor, and a quad 7-segment display.
   
   All these help in making flexible demos, but are not expected in production
   firmware.

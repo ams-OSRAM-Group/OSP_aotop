@@ -1,6 +1,6 @@
 // saidbasic.h - the demo application for the SAIDbasic board
 /*****************************************************************************
- * Copyright 2024 by ams OSRAM AG                                            *
+ * Copyright 2024,2025 by ams OSRAM AG                                       *
  * All rights are reserved.                                                  *
  *                                                                           *
  * IMPORTANT - PLEASE READ CAREFULLY BEFORE COPYING, INSTALLING OR USING     *
@@ -23,7 +23,8 @@
 
 
 // Application version (and its history)
-#define SAIDBASIC_VERSION "2.6"
+#define SAIDBASIC_VERSION "2.7"
+// 20250725  2.7  Using new aomw_iox4b4l io aomw_iox.
 // 20241017  2.6  Started app before command interpreter
 // 20241010  2.5  Added aotop version
 // 20240805  2.4  Added minimal documentation to top of ino

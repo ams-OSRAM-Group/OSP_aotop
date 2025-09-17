@@ -81,11 +81,11 @@ This section links to various resources.
   - OSP
     - RGBi [E3731i](https://ams-osram.com/products/leds/multi-color-leds/osram-osire-e3731i-krtbi-d2lm31-31) product page (OSP node with built-in RGB LEDs);
     - SAID [AS1163](https://ams-osram.com/products/drivers/led-drivers/ams-as1163-automotive-9-channel-stand-alone-intelligent-led-driver-ic) product page (OSP node with drivers for 9 external LEDs);
-    - SAID [AS1163B](https://ams-osram.com/products/drivers/led-drivers/ams-as1163b-automotive-6-channel-stand-alone-intelligent-led-driver-ic) product page (OSP node with drivers for 6 external LEDs).
+    - SAIDB [AS1163B](https://ams-osram.com/products/drivers/led-drivers/ams-as1163b-automotive-6-channel-stand-alone-intelligent-led-driver-ic) product page (OSP node with drivers for 6 external LEDs).
   - LEDs in the EVK
     - Top looker [E3323](https://ams-osram.com/products/leds/multi-color-leds/osram-osire-e3323-krtbdwlm31-32) product page (automotive ambient RGB);
     - Side looker [E5515](https://ams-osram.com/products/leds/multi-color-leds/osram-osire-e5515-krtbaelps1-32) product page (automotive interior RGB).
-  - Sensors in the EVK
+  - Sensors in the EVK **new**
     - Temperature sensor [AS6212](https://ams-osram.com/products/sensor-solutions/temperature-sensors/ams-as621x-temperature-sensors) product page (high accuracy digital I2C sensor);
     - Light sensor [SFH5721](https://ams-osram.com/products/sensor-solutions/ambient-light-color-spectral-proximity-sensors/osram-chip-led-sfh-5721) product page (ambient light and infrared I2C sensor);
     - Position sensor [AS5600](https://ams-osram.com/products/sensor-solutions/position-sensors/ams-as5600-position-sensor) product page (digital magnetic rotary position sensor).
@@ -95,12 +95,13 @@ This section links to various resources.
 
   - 1× OSP32 ([schematics](extras/schematics/OSP32_complete_v11.pdf)): root MCU board with an ESP32 (flashed with the [saidbasic](examples/saidbasic) demo), two SAIDs, and an I2C EEPROM (not flashed);
   - 1× SAIDbasic ([schematics](extras/schematics/SAIDbasic_complete_v8.pdf)): demo board with 3 SAID and 4 RGBIs, I/O-expander and I2C EEPROM flashed with [rainbow](examples/eepromflasher) script;
+  - 1× SAIDsense **new** ([schematics](todo)): demo board with 3 sensors, a selector and a display;
   - 1× RGBIstrip ([schematics](extras/schematics/OSIRE_E3731i_V2.3.pdf)): demo board with 20 RGBIs;
   - 1× SAIDlooker ([schematics](extras/schematics/SAIDLooker_complete_v4.pdf)): demo board with 3 SAIDs;
   - 2× Terminator ([schematics](extras/schematics/Terminator_complete_v3.pdf));
   - 2× EEPROM stick ([schematics](extras/schematics/I2CEEPROMstick-schematics_v2.pdf)): EEPROMs flashed with respectively the [bouncingblock](examples/eepromflasher) and [colormix](examples/eepromflasher) script;
   - 2× CAN adapter ([schematics](extras/schematics/CANadapter_complete_v3.2.pdf));
-  - 4× ERNI cable ([supplier](https://www.distrelec.nl/en/ribbon-cable-27mm-cores-200mm-black-erni-839017/p/14362654)).
+  - 5× ERNI cable ([supplier](https://www.distrelec.nl/en/ribbon-cable-27mm-cores-200mm-black-erni-839017/p/14362654)).
   
 
 (end of top-level documentation)
@@ -143,15 +144,20 @@ It contains no (library) code; but it serves several other functions.
 The examples in _aotop_ are not examples in the Arduino IDE sense 
 (explaining a feature), rather they are full-fledged (demo) applications.
 You can find them in the Arduino IDE via 
-File > Examples > OSP ToplevelSketches aotop > ...
+[File > Examples > OSP ToplevelSketches aotop > ...](examples):
 
+- **saiddemo** ([source](examples/saiddemo))  
+  This is an official application (centered around the SAIDsense board). 
+  This demo contains three apps: running LED, sensor visualization, 
+  and selected country flags by pressing a button.
+  It comes with a [user manual](extras/manuals/saiddemo.pdf).
 
 - **saidbasic** ([source](examples/saidbasic))  
   This is an official application (centered around the SAIDbasic board). 
   This demo contains 4 apps: scripted animation (from EEPROM), running LED, 
   (country) flags selected by pressing a button, and a dithering demo. 
   It comes with a [user manual](extras/manuals/saidbasic.pdf).
-  
+
 - **osplink** ([source](examples/osplink))  
   This is another official application. 
   It allows the PC (with a terminal like the Arduino Serial 
@@ -188,6 +194,21 @@ which identifies the version of this "library".
 
 ## Version history _aotop_
 
+- **2025 September 17, 0.5.0**
+  - Added `saiddemo.ino` application (with user manual) using the new SAIDsense demo board.
+  - Added SAIDsense board to EVK; also to Training, Schematics, and Getting Started.
+  - Added SAIDsense test cases to `evktester.ino`.
+  - Improved 3 UI messages `evktester.ino`.
+  - Improved user manual for `evktester.ino`; added flow chart.
+  - Comments fixed in `osplink.ino`.
+  - Stepped version of `saidbasic.ino` to 2.7 (using new `aomw_iox4b4l` i.o. `aomw_iox`).
+  - Switched to latest ESP32 board package (3.3.0).
+  - Textual changes in Getting Started.
+  - Corrected OTP burning training: bit burnt in the image @ slide 19.
+  - Explained where to get merged bins for [webflash](extras/manuals/webflash) manual.
+  - Added links to examples in Manuals page.
+  - Update Uniform colors training: section number ref to datasheet.
+  
 - **2025 May 27, 0.4.0**
   - Added ref to merged bins.
   - Added links to products used in EVK.

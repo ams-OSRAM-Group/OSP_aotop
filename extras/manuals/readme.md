@@ -1,24 +1,26 @@
 # Manuals
 
-This directory contains slides and videos for an OSP training and various manuals.
+This directory contains slides and videos for an OSP training and various documents.
 
 
 ## Training slides
+
+Slides presented during training sessions:
 
 - [ArduinoOSP-Training-Part1to8](ArduinoOSP-Training-Part1to8.pdf)  
   Slide (and exercises) for a one-day training on the Arduino OSP Evaluation kit.
   For the videos see the next section.
 
 - [ArduinoOSP-Training-Appendix2-uniformcolors](ArduinoOSP-Training-Appendix2-uniformcolors.pdf)  
-  Slides for a one-hour training on OTP burning of SAID.
+  Slides for a half-hour training on having the same color point across the chain irrespective of ambient conditions.
  
 - [ArduinoOSP-Training-Appendix3-otpburn](ArduinoOSP-Training-Appendix3-otpburn.pdf)  
-  Slides for a one-hour training on OTP burning of SAID.
+  Slides for a half-hour training on OTP burning of SAID.
 
 
 ## Training videos
 
-For the presented slides, see previous section.
+Videos of training sessions (slides in previous section):
 
 - [FHD](https://look.ams-osram.com/m/12d66825f5ad84fe/original/ams-OSRAM-Arduino-OSP-ecosystem-Evaluation-Kit-Training-Part-1.mp4)
   and
@@ -56,13 +58,39 @@ For the presented slides, see previous section.
   video for part 7 _Command interpreter_ and part 8 _Miscellaneous_.
 
 
-## Manuals
+## User manuals
 
-- [Getting started](../../gettingstarted.md) with the evaluation kit.
+User manuals for demo applications:
+
 - [User manual](saidbasic.pdf) for the [SAIDbasic](../../examples/saidbasic) application.
+- [User manual](saiddemo.pdf) for the [SAIDdemo](../../examples/saiddemo) application.
+
+
+## Documents
+
+Documents on specific topics:
+
 - How to determine the version of a [SAID](saidversions).
-- Introduction to the [command interpreter](https://github.com/ams-OSRAM/OSP_aocmd?tab=readme-ov-file#example-commands).
 - Using a browser to [flash](webflash) a firmware image.
+- [Getting started](../../gettingstarted.md) with the evaluation kit.
+- Introduction to the [command interpreter](https://github.com/ams-OSRAM/OSP_aocmd?tab=readme-ov-file#example-commands).
+- How to bring up your own hardware in example [aospi_bringup](https://github.com/ams-OSRAM/OSP_aospi/tree/main/examples/aospi_bringup).
  
+
+## Examples
+
+Every one of the 8 libraries comes with Arduino style examples. 
+The OSP related ones are in:
+
+- [aoosp](https://github.com/ams-OSRAM/OSP_aoosp?tab=readme-ov-file#examples) with e.g.
+  CRC computation, blinky, drive current, SAID error reporting, OSP groups, 
+  LED status, I2C, SYNC feature, (SAID) ADC, clustering, and using and burning OTP. 
+
+- [aospi](https://github.com/ams-OSRAM/OSP_aospi?tab=readme-ov-file#examples) with e.g.
+  low level blinky, bring-up, and MCU mode A.
+
+- [aomw](https://github.com/ams-OSRAM/OSP_aomw?tab=readme-ov-file#examples) with e.g. 
+  uniform colors and I2C EEPROM access.
+
 
 (end)

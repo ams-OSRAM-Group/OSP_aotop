@@ -23,7 +23,8 @@
 
 
 // Application version (and its history)
-#define EVKTESTER_VERSION "0.7"
+#define EVKTESTER_VERSION "1.0"
+// 20250808  1.0  Added SAIDsense test, updated SAIDbasic (new iox4b4l)
 // 20250325  0.7  Small typos fixed
 // 20250324  0.6  Added two line instruction at 0.start
 // 20250324  0.5  Added rainbow, bouncingblock, colormix

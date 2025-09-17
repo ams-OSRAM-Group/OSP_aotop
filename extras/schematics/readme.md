@@ -12,6 +12,10 @@ Arduino OSP evaluation kit are available:
   [v8](SAIDbasic_complete_v8.pdf), [v7.1](SAIDbasic_complete_v7.1.pdf)  
   ![SAIDbasic](SAIDbasic_complete_v8.png)
 
+- **SAIDsense**
+  [v2](SAIDsense_v2.pdf) [v5](SAIDsense_v5.pdf) [v6](SAIDsense_v6.pdf)    
+  ![SAIDsense](SAIDsense_v2.png)
+
 - **RGBIstrip**
   [V2.3](OSIRE_E3731i_V2.3.pdf)  
   ![RGBI strip](OSIRE_E3731i_V2.3.png)

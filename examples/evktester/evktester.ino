@@ -48,11 +48,12 @@ The test expects the following topology:
      bouncingblock-EEPROM
 However during the test small modifications must be made by the operator,
 like replacing terminator1 by terminator2 or by a loop-back cable, or
-replacing the bouncingblock-EEPROM by the colormox-EEPROM
+replacing the bouncingblock-EEPROM by the colormix-EEPROM.
+The SAIDsense board has been added, but the V2 version, not yet the v5 (todo).
 In Arduino select board "ESP32S3 Dev Module".
 
 BEHAVIOR
-During the test, all RGB LEDs, OSP32 signalling LEDs and SAIBasic indicator 
+During the test, all RGB LEDs, OSP32 signaling LEDs and SAIBasic indicator 
 LEDs will be switched on and off. One test is not scripted, pressing the 
 RST button on OSP32. The "end test" instructs to do that.
 It is suggested to save the output - up to and including the RST at the 
@@ -66,21 +67,21 @@ OUTPUT
 |  __|   \ \/ / |  < | __/ _ \/ __| __/ _ \ '__|
 | |____   \  /  | . \| ||  __/\__ \ ||  __/ |
 |______|   \/   |_|\_\\__\___||___/\__\___|_|
-EVKtester - version 0.7
+EVKtester - version 1.0
 
-spi: init
+spi: init(MCU-B)
 osp: init
 ui32: init
 
-version: 0.5
-cases: 15
-mac: 24:58:7C:DE 77:B0:CA:3F
+version: 1.0
+cases: 18
+mac: C0:4E:30:0A C0:F4:CA:3F
 
 START
 1.uibut= OK
 2.uiled= OK
 3.usbpow= OK
-4.osptopo= OK
+4.topo1= OK
 5.term2= OK
 6.loop= OK
 7.white= OK
@@ -90,9 +91,12 @@ START
 11.rainbow= OK
 12.bouncingblock= OK
 13.colormix= OK
-exec    : 13
+14.topo2= OK
+15.senled= OK
+16.sensen= OK
+exec    : 16
 running : 0
-success : 13
+success : 16
 fail    : 0
 timeout : 0
 END
@@ -114,20 +118,21 @@ entry 0x403c88ac
 |  __|   \ \/ / |  < | __/ _ \/ __| __/ _ \ '__|
 | |____   \  /  | . \| ||  __/\__ \ ||  __/ |
 |______|   \/   |_|\_\\__\___||___/\__\___|_|
-EVKTESTER - version 0.5
+EVKtester - version 1.0
 
-spi: init
+spi: init(MCU-B)
 osp: init
 ui32: init
 
-version: 0.5
-cases: 15
-mac: 24:58:7C:DE 77:B0:CA:3F
+version: 1.0
+cases: 18
+mac: C0:4E:30:0A C0:F4:CA:3F
 */
 
 
 /*
 USERMANUAL for the EVKtester
+- See also evktester.drawio.png
 - Flash this sketch in the ESP32
 - Keep the SerialMonitor open while running; it prints the test report.
 
@@ -143,16 +148,20 @@ USERMANUAL for the EVKtester
   to press that after completing any configuration instruction in 
   the description.
 - After A is a pressed, the OLED will show a *run prompt* of the form
-  "a.bbb> report_running". The greater than ">" symbol identifies 
-  that the test is running.
+  "a.bbb> running". The greater than ">" symbol identifies that the test 
+  is running.
 - Some tests run automatically to completion. After completion, the run 
   prompt will then be replaced by a *report*, either "a.bbb= OK" or 
-  "a.bbb= FAIL".
+  "a.bbb= FAIL", the equals "=" identifies this as report.
 - The report is also printed on the Serial console (with more details 
   in case of a fail).
 - When the report is shown, either press A to run the test again
   or press X or Y to select another test. Typical is to press Y
   to select the next test, and then A to execute the next test.
+- The first test case is "fake" it clears the stats.
+  The last test case is also "fake" it prints the stats, hopefully
+  something like exec:16, success:16.
+  
 - Some tests need human *verification* (eg check a LED). What to check
   will be shown in the run prompt. The test completes with the user 
   pressing Y or X; Y means "Yes, ok", and X means "No, not ok". 
@@ -165,7 +174,7 @@ USERMANUAL for the EVKtester
   note the [TO], which stands for Time-Out. 
   If the operator does not complete the action within 30 sec or
   when the hardware is broken and the system can not detect the
-  action, the tests end after a timeout with a report of the
+  action, the test ends after a timeout with a report of the
   form "a.bbb= TIMEOUT".
 */
 

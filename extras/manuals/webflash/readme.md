@@ -22,10 +22,17 @@ a directory `build` in the sketch folder, for example see
 [saidbasic](https://github.com/ams-OSRAM/OSP_aotop/tree/main/examples/saidbasic/build).
 For web flash you would need [saidbasic.ino.merged.bin](https://github.com/ams-OSRAM/OSP_aotop/tree/main/examples/saidbasic/build/esp32.esp32.esp32s3/saidbasic.ino.merged.bin).
 
+![Assets as local file](webflash-assets2.png)
+
+Some of those merged binaries are also published as assets with a release.
+
+![Assets on web](webflash-assets1.png)
+  
+
 
 ## Flashing
 
-- USB a USB cable to connect the PC with the OSP32 board.
+- With a USB cable connect the PC with the OSP32 board.
   It is suggested to use the port labeled "DBG" that seems to require
   no driver. 
 
@@ -45,7 +52,7 @@ For web flash you would need [saidbasic.ino.merged.bin](https://github.com/ams-O
 - With the "Console" pane you can view the prints over Serial.
   We ignore that here, we focus on the "Program" pane.
   
-  The default baudrate (921600) is ok; click on the "Connect" button 
+  The default baud rate (921600) is ok; click on the "Connect" button 
   in the "Program" pane. A security feature of the browser pops-up: 
   the user has to grant the browser access to the USB port. 
   
@@ -64,8 +71,9 @@ For web flash you would need [saidbasic.ino.merged.bin](https://github.com/ams-O
   
 - After successful connection (0), click `Choose File` (1) and browse to 
   a so-called _merged_ bin file (`xxx.ino.merged.bin`).
+  
   You find them with some of the examples, like [saidbasic.ino.merged.bin](https://github.com/ams-OSRAM/OSP_aotop/tree/main/examples/saidbasic/build/esp32.esp32.esp32s3/saidbasic.ino.merged.bin)
-  but they are also published as _Assets_ with a [release](https://github.com/ams-OSRAM/OSP_aotop/releases).
+  in the `build` sub-directory, but they are also published as _Assets_ with some [releases](https://github.com/ams-OSRAM/OSP_aotop/releases).
 
   ![Web flash config](webflash-3config.png)
  

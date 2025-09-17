@@ -1,4 +1,4 @@
-// saidbasic.ino - the demo application for the SAIDbasic board
+// saiddemo.ino - the demo application for the Arduino OSP evaluation kit
 /*****************************************************************************
  * Copyright 2024,2025 by ams OSRAM AG                                       *
  * All rights are reserved.                                                  *
@@ -25,16 +25,16 @@
 #include <aomw.h>      // aomw_init()
 #include <aoapps.h>    // aoapps_mngr_start()
 #include <aotop.h>     // AOTOP_VERSION
-#include "saidbasic.h" // application info
+#include "saiddemo.h"  // application info
 
 
 /*
 DESCRIPTION
-This is the official demo of the SAIDbasic board. It contains 4 apps:
-scripted animation (from EEPROM), running LED, flags selected by pressing 
-a button, and a dithering demo. 
+This is the official demo of the Arduino OSP evaluation kit. It contains 
+three apps: running LED, sensor visualization, and selected country flags 
+by pressing a button. 
 
-Press the A button to switch between them. The OLED shows the name of the 
+Press the A button to switch between the apps. The OLED shows the name of the 
 running app. Some apps use the X and Y button for extra features, see the 
 OLED for a short hint (sometimes long press repeats).
 
@@ -46,26 +46,25 @@ An option is to make a boot.cmd file (command "file record") with eg
   topo dim 200
 
 HARDWARE
-The demo should run on the OSP32 board, connected to the SAIDbasic board. 
-Either have a terminator in the SAIDbasic OUT connector, or have a cable from 
-the SAIDbasic OUT to the OSP32 IN connector. Optionally, plug an EEPROM with
-an animation script in the SAIDbasic I2C header.
+The demo should run on the OSP32 board, connected to the SAIDsense board. 
+Either have a terminator in the SAIDsense OUT connector, or have a cable from 
+the SAIDsense OUT to the OSP32 IN connector. 
 In Arduino select board "ESP32S3 Dev Module".
 
 BEHAVIOR
 The behavior depends on the app chosen and the buttons pressed.
-See also user manual OSP_aotop\extras\manuals\saidbasic.pdf
+See also user manual OSP_aotop\extras\manuals\saidsense.pdf
 
 OUTPUT
-  _____         _____ _____  _               _
- / ____|  /\   |_   _|  __ \| |             (_)
-| (___   /  \    | | | |  | | |__   __ _ ___ _  ___
- \___ \ / /\ \   | | | |  | | '_ \ / _` / __| |/ __|
- ____) / ____ \ _| |_| |__| | |_) | (_| \__ \ | (__
-|_____/_/    \_\_____|_____/|_.__/ \__,_|___/_|\___|
-SAIDbasic - version 2.4
+  _____         _____ _____      _                      
+ / ____|  /\   |_   _|  __ \    | |                     
+| (___   /  \    | | | |  | | __| | ___ _ __ ___   ___  
+ \___ \ / /\ \   | | | |  | |/ _` |/ _ \ '_ ` _ \ / _ \ 
+ ____) / ____ \ _| |_| |__| | (_| |  __/ | | | | | (_) |
+|_____/_/    \_\_____|_____/ \__,_|\___|_| |_| |_|\___/ 
+SAIDdemo - version 3.0
 
-spi: init
+spi: init(MCU-B)
 osp: init
 cmd: init
 ui32: init
@@ -76,14 +75,18 @@ apps: registered
 
 No 'boot.cmd' file available to execute
 Type 'help' for help
->> aniscript: starting on 18 RGBs
-aniscript: playing from EEPROM 50 on SAID 005 
+>> sensors: using temp sensor 48 on SAID 003 
+sensors: using rotation sensor 36 on SAID 003
+sensors: using light sensor 26 on SAID 003
+sensors: using display 38 on SAID 003
+sensors: using selector 3F on SAID 003
+>> swflag: using I/O-expander 3F (SAIDsense) on SAID 003 
 */
 
 
 // Library aocmd "upcalls" via aocmd_version_app() to allow the application to print its version.
 void aocmd_version_app() {
-  Serial.printf( "%s %s\n", SAIDBASIC_LONGNAME, SAIDBASIC_VERSION );
+  Serial.printf( "%s %s\n", SAIDDEMO_LONGNAME, SAIDDEMO_VERSION );
 }
 
 
@@ -104,10 +107,9 @@ void cmds_register() {
 
 // Pick apps that we want in this application
 void apps_register() {
-  aoapps_aniscript_register();
   aoapps_runled_register();
+  aoapps_sensors_register();
   aoapps_swflag_register();
-  aoapps_dither_register();
   Serial.printf("apps: registered\n");
 }
 
@@ -116,8 +118,8 @@ void setup() {
   // Identify over Serial
   Serial.begin(115200);
   do delay(250); while( ! Serial );
-  Serial.printf(SAIDBASIC_BANNER);
-  Serial.printf("%s - version %s\n\n", SAIDBASIC_LONGNAME, SAIDBASIC_VERSION);
+  Serial.printf(SAIDDEMO_BANNER);
+  Serial.printf("%s - version %s\n\n", SAIDDEMO_LONGNAME, SAIDDEMO_VERSION);
 
   // Initialize all libraries
   aospi_init(); 
@@ -128,11 +130,14 @@ void setup() {
   aoapps_init();
   cmds_register();
   apps_register();
+
+  // If there is a SAIDbasic board or a SAIDsense board, switch off indicators (and 7 segments)
   aoapps_swflag_resethw();
+  aoapps_sensors_resethw();
   
   // Show end of init
   Serial.printf("\n");
-  aoui32_oled_splash(SAIDBASIC_LONGNAME,SAIDBASIC_VERSION); 
+  aoui32_oled_splash(SAIDDEMO_LONGNAME,SAIDDEMO_VERSION); 
   delay(1000);
 
   // Start the first app
