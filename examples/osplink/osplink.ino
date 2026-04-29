@@ -29,16 +29,18 @@
 /*
 DESCRIPTION
 This application allows the PC to send and receive OSP telegrams, using the
-serial-over-USB connection from PC to OSP32 (use the USB plug labeled uart
-of the ESP32 board). On the PC, use a terminal program like putty or 
-the Arduino Serial Monitor to enter textual commands manually. It is also
-possible to write a Python script to sends these commands (see for an example
+serial-over-USB connection from PC to OSP32 (use the USB plug labeled UART
+on the ESP32 board, this should have label CMD on the OSP32 board). 
+
+On the PC, use a terminal program like putty or the Arduino Serial Monitor 
+to enter textual commands and get feedback. It is also possible to write 
+a Python script to send and receive commands (see for an example
 https://github.com/ams-OSRAM/OSP_aocmd/tree/main/python), or even have
 a windows GUI application that does that.
 
 The commands have help built-in. Enter the "help" command to get a list
-of command or "help xxx" to get help on command xxx. For an introduction
-see the [aocmd library](..\..\aolibs\aocmd\readme.md).
+of commands or "help xxx" to get help on command xxx. For an introduction
+see the aocmd library (readme.md).
 
 HARDWARE
 This sketch runs on the OSP32 board. Typically a demo board like 
@@ -77,7 +79,7 @@ void aocmd_version_app() {
 
 // Library aocmd "upcalls" via aocmd_version_extra() to allow the application to print the version of other ingredients.
 void aocmd_version_extra() {
-  Serial.printf( "aolibs  : mw %s ui32 %s top %s\n", AOMW_VERSION, AOUI32_VERSION, AOTOP_VERSION);
+  Serial.printf( "aolibs  : mw %s, ui32 %s, top %s\n", AOMW_VERSION, AOUI32_VERSION, AOTOP_VERSION);
 }
 
 

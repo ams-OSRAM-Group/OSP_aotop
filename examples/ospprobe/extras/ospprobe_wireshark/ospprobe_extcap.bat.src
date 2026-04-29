@@ -1,0 +1,22 @@
+@ECHO OFF
+
+REM Activate Python virtual environment
+CALL %~dp0pyenv\Scripts\activate.bat
+REM Start the extcap
+python "%~dp0ospprobe_extcap.py" %*
+
+REM - Store this file in the extcap directory.
+REM   PORTABLE64  C:\Programs\WiresharkPortable64\Data\extcap\ospprobe_extcap.bat
+REM   WIN_NATIVE  C:\Users\<user>\AppData\Roaming\Wireshark\extcap\ospprobe_extcap.bat
+REM - Optionally add a debug log file, this should pop up when starting Wireshark
+REM   PORTABLE64  ECHO %time% - path=%~dp0 args=%* >>  "C:\Programs\WiresharkPortable64\Data\extcap\ospprobe_extcap.log"
+REM   WIN_NATIVE  ECHO %time% - args: %* >> %temp%\ospprobe_extcap.log
+REM - Optionally check if the python env is working
+REM   PORTABLE64  python --version  >>  "C:\Programs\WiresharkPortable64\Data\extcap\ospprobe_extcap.log"
+REM - Optionally, when python is not yet running add, this should add OSP to the start screen of Wireshark.
+REM     IF "%1"=="--extcap-interfaces" (
+REM         ECHO extcap {version=1.0}{display=OSPProbe Interface}{help=http://www.wireshark.org}
+REM         ECHO interface {value=ospprobe}{display=OSP capture with OSPprobe}
+REM     )
+REM - To find errors in your script, try
+REM   ospprobe_extcap.bat  --capture  --extcap-interface ospprobe  --fifo .\fakefifo.txt  --port COM3

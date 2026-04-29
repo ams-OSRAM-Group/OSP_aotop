@@ -1,0 +1,240 @@
+# ospprobe_extcap.py - External capture utility (extcap) for Wireshark capturing OSP telegrams from ospprobe 
+
+# - You must have Python in your PATH 
+#   Python 3.7 or higher is the recommended minimum version; code uses f-strings
+# - You must have pyserial installed
+#   python -m pip install pyserial
+# - You must have crcmod installed
+#   python -m pip install crcmod
+# - Store this file in the user's extcap directory
+#   PORTABLE64  C:\Programs\WiresharkPortable64\Data\extcap\ospprobe_extcap.py
+#   WIN_NATIVE  C:\Users\<user>\AppData\Roaming\Wireshark\extcap\ospprobe_extcap.py
+# - Wireshark does not run python scripts natively, add the wrapper 
+#   ospprobe_extcap.bat
+# - To test, active the pyenv and run eg
+#   python ospprobe_extcap.py --extcap-config --extcap-interface ospprobe
+
+
+import sys
+import crcmod
+import struct
+import serial
+import argparse
+import re
+import time
+import random
+import serial.tools.list_ports
+
+
+ospcrcfunc = crcmod.mkCrcFun(0b100101111, initCrc=0, rev=False, xorOut=0) 
+  
+
+# Generates random telegrams (TTTTTTTT SSSSXHHHHHHDD..DDCC) - so there are several inconsistencies
+class MockSerial:
+  def __init__(self):
+    self.seqnum_tx = 0
+    self.seqnum_rx = 0
+
+  def close(self) :
+    pass
+    
+  def readline(self):
+    # Simulate a delay between telegrams
+    time.sleep(0.5)
+    
+    # TTTTTTTT: Generate microsecond `timestamp` (incrementing)
+    timestamp = f"{int(time.time() * 1000000) & 0xFFFFFFFF:08X}"
+
+    # X: Pick random `direction` (mostly tx)
+    dir_tx = random.random() > 0.05
+    direction = "T" if dir_tx else "R"
+
+    # SSSS: Sequence number; set `seqnum` and `missing`
+    missing = ' '
+    if dir_tx :
+      self.seqnum_tx += 1
+      if random.random() > 0.95 : self.seqnum_tx += 1; missing='+'
+      seqnum= f"{self.seqnum_tx % 65536:04X}"
+    else :
+      self.seqnum_rx += 1
+      if random.random() > 0.95 : self.seqnum_rx += 1; missing='+'
+      seqnum= f"{self.seqnum_rx % 65536:04X}"
+
+    # HHHHHH: Static header for testing
+    preamble= 0xA
+    address = random.getrandbits(5) # mostly use small addresses
+    if random.random() > 0.95 : address = random.getrandbits(10)
+    psi = 0 # mostly use no payload
+    if random.random() > 0.50 : psi = random.getrandbits(3)
+    tid = random.getrandbits(5) # mostly use lower tid's
+    if random.random() > 0.95 : tid = random.getrandbits(5)
+    header = f"{(preamble<<20) + (address<<10) + (psi<<7) + (tid<<0) :06X}"
+    
+    # DD..DD: payload data
+    #payload = f"{random.getrandbits(32):08X}"
+    len = 8 if psi==7 else psi
+    if random.random() > 0.95 and len>0 : len=len-1
+    payload = "1122334455667788"[:len*2]
+    
+    # CC: Dummy `checksum`
+    crc = ospcrcfunc( bytes.fromhex(f"{header}{payload}") )
+    if random.random() > 0.95 : crc = crc + 1 # spoof crc error
+    checksum= f"{crc:02X}"
+
+    # Construct the exact string: "TTTTTTTT SSSSXHHHHHHDD..DDCC\n"
+    mock_line = f"{timestamp}{missing}{seqnum}{direction}{header}{payload}{checksum}\n"
+    return mock_line.encode('ascii')
+
+
+# Protocol constant (DLT_USER0 = 147).
+# You will point your Lua Dissector to this ID later.
+DLT_USER0 = 147
+
+
+def get_interfaces():
+  print("interface {value=ospprobe}{display=OSP telegram}")
+
+
+def get_config(interface):
+  # This adds a dropdown in the Wireshark UI to select the COM port
+  print("arg {number=0}{call=--port}{display=COM Port}{type=selector}{tooltip=The COM port to open}{required=true}")
+
+  # List available ports as options for the selector
+  ports = serial.tools.list_ports.comports()
+  for i, p in enumerate(ports):
+    dflt = "{default=true}" if i==0 else ""
+    print(f"value {{arg=0}}{{value={p.device}}}{{display={p.device}: {p.description}}}{dflt}")
+    
+  # Add the test COM port with spoofs telegrams
+  print(f"value {{arg=0}}{{value=COMx}}{{display=COMx: spoofed telegrams}}")
+
+
+def create_pcap_header():
+  # Create a 24 byte header (<=little endian, I=int32, H=int16)
+  # 0xa1b2c3d4 I Magic Number  Identifies this as a PCAP file and sets the byte order.
+  # 2          H Version Major PCAP major version (currently 2).
+  # 4          H Version Minor PCAP minor version (currently 4).
+  # 0          I Thiszone      GMT to local correction (usually 0).
+  # 0          I Sigfigs       Accuracy of timestamps (usually 0).
+  # 65535      I Snaplen       Max bytes captured per packet (64KB is standard).
+  # DLT_USER0  I Network       The "Data Link Type" (DLT).
+  # Note Ethernet is DLT_EN10MB (Value 1); DLT_USER0 (Value 147) is a "Reserved for Private Use" slot.
+  return struct.pack("<IHHIIII", 0xa1b2c3d4, 2, 4, 0, 0, 65535, DLT_USER0)
+
+
+def create_packet(packet, timestamp_hex):
+  try:
+    # Convert hex string (TTTTTTTT) to a large integer of microseconds
+    total_usec = int(timestamp_hex, 16)
+    # Calculate whole seconds and the remainder (microseconds)
+    ts_sec = total_usec // 1000000
+    ts_usec = total_usec % 1000000
+  except ValueError:
+    # Fallback to system time if parsing fails
+    import time
+    t = time.time()
+    ts_sec = int(t)
+    ts_usec = int((t - ts_sec) * 1000000)
+
+  n = len(packet)
+  # Packet Header: ts_sec, ts_usec, incl_len, orig_len
+  header = struct.pack("<IIII", ts_sec, ts_usec, n, n)
+  return header + packet
+
+
+def capture(fifo, port):
+  # log = open("C:\\Users\\xxx\\Desktop\\extcap.log", "a")
+
+  try:
+    # Virtual serial ports usually ignore baudrate, but we set it for compatibility
+    # ser = serial.Serial(port, baudrate=115200, timeout=1)
+    if port=="COMx" :
+      ser = MockSerial()
+    else :
+      ser = serial.Serial(port, baudrate=115200, timeout=1)
+      ser.write(b' ') # Write something to port so OSPprobe swithes to "USB Serial" mode
+    
+  except Exception as e:
+    sys.stderr.write(f"Error opening port {port}: {e}\n")
+    sys.exit(1)
+
+  try: 
+    with open(fifo, 'wb') as f:
+      # Write the Global PCAP Header (sent once at start)
+      f.write(create_pcap_header())
+      f.flush()
+
+      while True:
+        #                    012345678901234567890
+        # Read a line like: "TTTTTTTT SSSSXHHHHHHDD..DDCC\n"
+        line = ser.readline().decode('ascii', errors='ignore').strip()
+        if not line:
+          continue
+
+        # log.write(line)
+        
+        try:
+          # 0000000000111111111122
+          # 0123456789012345678901
+          # TTTTTTTT SSSSXHHHHHHDD..DDCC
+          last = len(line)
+          timestamp_hex  = line[0:8]
+          missing_char   = line[8]
+          seqnum_hex     = line[9:13]
+          direction_char = line[13]
+          telegram_hex   = line[14:]
+
+          # flags: PSI-error, CRC-error, decode-error, missing-seqnum, direction_rx
+          psi = ( int(telegram_hex[3:5],16)>>3 ) & 7 # indicator value
+          psa = 8 if psi==7 else psi                 # actual size
+          # ---PCDMR
+          R= direction_char=='R' or direction_char=='r' # alternative is 'T' or 't'
+          M= missing_char=='+'
+          D= direction_char=='t' or direction_char=='r'
+          C= int(telegram_hex[-2:],16) != ospcrcfunc(bytes.fromhex(telegram_hex[:-2]))
+          P= psa != len(telegram_hex)//2-4
+          if D : C=False; P=False
+          flags_byte= bytes([P*16+C*8+D*4+M*2+R*1])
+          # Note: Responsability-wise these should probably be done in dissector: PSI-error, CRC-error, missing-seqnum
+	  
+          # log.write( f"{telegram_hex} {psi} {psa} {len(telegram_hex)//2-4} {P}\n" )
+	  
+          # Two meta fields (seqnum and flags) plus telegram
+          packet = bytes.fromhex(seqnum_hex) + flags_byte + bytes.fromhex(telegram_hex)
+          
+          # Wrap in PCAP Packet Header and write to the FIFO pipe
+          f.write(create_packet(packet, timestamp_hex))
+          f.flush()
+
+        except (ValueError, IndexError):
+          # If a line is malformed or too short, skip it
+          continue
+          
+  finally:
+    ser.close()
+    # log.close()
+
+
+if __name__ == "__main__":
+  parser = argparse.ArgumentParser(description="Extcap Serial")
+  parser.add_argument("--extcap-version", help="The Wireshark version")
+  parser.add_argument("--extcap-cleanup-postkill", action="store_true")
+  parser.add_argument("--extcap-interfaces", action="store_true")
+  parser.add_argument("--extcap-config", action="store_true")
+  parser.add_argument("--extcap-interface")
+  parser.add_argument("--extcap-dlts", action="store_true")
+  parser.add_argument("--capture", action="store_true")
+  parser.add_argument("--fifo")
+  parser.add_argument("--port")
+
+  args = parser.parse_args()
+
+  if args.extcap_interfaces:
+    get_interfaces()
+  elif args.extcap_config:
+    get_config(args.extcap_interface)
+  elif args.extcap_dlts:
+    # Diagnostic Log and Trace identification
+    print(f"dlt {{number={DLT_USER0}}}{{name=USER0}}{{display=OSP}}")
+  elif args.capture:
+    capture(args.fifo, args.port)

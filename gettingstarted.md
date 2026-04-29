@@ -351,20 +351,18 @@ In general, take the latest greatest of all components. If there are
 problems, these are the versions the _aolib_ developers used and tested
 (2025 March 28).
 
-- Arduino IDE 2.3.6.
-- Board manager "esp32 by Espressif Systems" 3.3.0.  
-  Unfortunately this library uses and old "Touch API" so a compile 
-  warns `This set of Touch APIs has been deprecated` in file 
-  `3.3.0\cores\esp32\esp32-hal-touch.c`.
+- Arduino IDE 2.3.8.
+- Board manager "esp32 by Espressif Systems" 3.3.8.
 - No external libraries are used.
-- As PCB the OSP32 v11, SAIDbasic v7, SAIDsense v2,  and SAIDlooker v3.   
+- As PCB the OSP32 v11, SAIDbasic v7, SAIDsense v5, and SAIDlooker v3.   
   Some SAIDs on the older boards are the v1.0 engineering samples 
   instead of the v1.1 production samples; see 
   [saidversions](extras/manuals/saidversions).
 
 In Arduino, we have _File > Preferences > Compiler warnings > All_ to have the
 highest checking level during development. At the moment of writing this
-statement, a compile results in no errors or warnings.
+statement, a compile of e.g. SAIDdemo results in no errors and no warnings 
+in the aolibs (but there are some in the libs supplied by Espressif).
 
 
 ## Which libraries to use

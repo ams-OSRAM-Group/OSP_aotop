@@ -1,6 +1,7 @@
 # Manuals
 
-This directory contains slides and videos for an OSP training and various documents.
+This directory contains (links to) slides and videos for an OSP training and 
+various other documents.
 
 
 ## Training slides
@@ -11,6 +12,9 @@ Slides presented during training sessions:
   Slide (and exercises) for a one-day training on the Arduino OSP Evaluation kit.
   For the videos see the next section.
 
+- [ArduinoOSP-Training-Appendix1-starnetworks](ArduinoOSP-Training-Appendix1-starnetworks.pdf)  
+  Slides for a one hour training on parallelism in OSP (star networks).
+ 
 - [ArduinoOSP-Training-Appendix2-uniformcolors](ArduinoOSP-Training-Appendix2-uniformcolors.pdf)  
   Slides for a half-hour training on having the same color point across the chain irrespective of ambient conditions.
  
@@ -64,6 +68,7 @@ User manuals for demo applications:
 
 - [User manual](saidbasic.pdf) for the [SAIDbasic](../../examples/saidbasic) application.
 - [User manual](saiddemo.pdf) for the [SAIDdemo](../../examples/saiddemo) application.
+- [User manual](../../examples/ospprobe/readme.md#ospprobe-user-manual) for the [OSPprobe](../../examples/ospprobe) analysis tool.
 
 
 ## Documents
@@ -75,6 +80,21 @@ Documents on specific topics:
 - [Getting started](../../gettingstarted.md) with the evaluation kit.
 - Introduction to the [command interpreter](https://github.com/ams-OSRAM/OSP_aocmd?tab=readme-ov-file#example-commands).
 - How to bring up your own hardware in example [aospi_bringup](https://github.com/ams-OSRAM/OSP_aospi/tree/main/examples/aospi_bringup).
+
+
+## Application notes
+
+Application notes on specific topics:
+
+- [AN001081](https://look.ams-osram.com/m/72009df17ca1b9e1/original/AS1163-OTP-burning.pdf) AS1163 - OTP burning.
+- [AN001082](https://look.ams-osram.com/m/472f011d426e0d58/original/AS1163-Communication-mode-MCU-mode-type-B.pdf) AS1163 – Communication mode (MCU mode type-B).
+- [AN001086](https://look.ams-osram.com/m/4fd507f6ce10c5b9/original/AS1163-star-net-parallel-addressing.pdf) AS1163 star net – parallel addressing.
+- [AN001087](https://look.ams-osram.com/m/30b3ff9b4cc83ae/original/AS1163-PWM-settings-multiple-driving-options.pdf) AS1163 PWM settings – multiple driving options.
+- [AN001090](https://look.ams-osram.com/m/63c7b39bcb8f5490/original/AS1163-I-C-bridge-SAID-as-I-C-gateway.pdf) AS1163 I²C bridge – SAID as I²C gateway.
+- [AN001097](https://look.ams-osram.com/m/57997b9937b755ea/original/AS1163-clustering-different-output-configurations.pdf) AS1163 clustering – different output configurations.
+- [AN001098](https://look.ams-osram.com/m/29e0abd6c525f548/original/AS1163-Power-states-operating-conditions.pdf) AS1163 Power states – operating conditions.
+- [AN001101](https://look.ams-osram.com/m/4c5c4a881543c6f8/original/AS1163-ADC-measure-analog-signals.pdf) AS1163 ADC – measure analog signals.
+- [AN001105](https://look.ams-osram.com/m/a8987b8c6ca8ab/original/AS1163-power-management-evaluate-the-power-consumption.pdf) AS1163 power management – evaluate the power consumption.
  
 
 ## Examples
@@ -84,13 +104,14 @@ The OSP related ones are in:
 
 - [aoosp](https://github.com/ams-OSRAM/OSP_aoosp?tab=readme-ov-file#examples) with e.g.
   CRC computation, blinky, drive current, SAID error reporting, OSP groups, 
-  LED status, I2C, SYNC feature, (SAID) ADC, clustering, and using and burning OTP. 
+  PSI of 5 handling, LED status, I2C (also 12 bit), SYNC feature, (SAID) ADC, 
+  clustering, telegram timing, network topology, and using and burning OTP. 
 
 - [aospi](https://github.com/ams-OSRAM/OSP_aospi?tab=readme-ov-file#examples) with e.g.
-  low level blinky, bring-up, and MCU mode A.
+  low level blinky, telegram timing (hops), bring-up, and MCU mode A.
 
 - [aomw](https://github.com/ams-OSRAM/OSP_aomw?tab=readme-ov-file#examples) with e.g. 
-  uniform colors and I2C EEPROM access.
+  uniform colors, chain topology, and I2C EEPROM access.
 
 
 (end)

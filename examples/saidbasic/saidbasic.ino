@@ -38,8 +38,8 @@ Press the A button to switch between them. The OLED shows the name of the
 running app. Some apps use the X and Y button for extra features, see the 
 OLED for a short hint (sometimes long press repeats).
 
-The green button should blink (heartbeat); once the red error is on, an
-error occurred, the demo halts; and the OLED shows error details.
+The green "OK" LED should blink (heartbeat); once the red "ERR" LED is on, 
+an error occurred, the demo halts; and the OLED shows error details.
 
 An option is to make a boot.cmd file (command "file record") with eg
   apps conf swflag set   dutch europe italy mali
@@ -89,7 +89,7 @@ void aocmd_version_app() {
 
 // Library aocmd "upcalls" via aocmd_version_extra() to allow the application to print the version of other ingredients
 void aocmd_version_extra() {
-  Serial.printf( "aolibs  : mw %s ui32 %s apps %s top %s\n", AOMW_VERSION, AOUI32_VERSION, AOAPPS_VERSION, AOTOP_VERSION);
+  Serial.printf( "aolibs  : mw %s, ui32 %s, apps %s, top %s\n", AOMW_VERSION, AOUI32_VERSION, AOAPPS_VERSION, AOTOP_VERSION);
 }
 
 

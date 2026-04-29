@@ -1,0 +1,4 @@
+# This file was created by Wireshark. Edit with care.
+@New coloring rule@osp.flags>1@[65535,56797,54227][0,0,0]
+@New coloring rule@osp.header.tid==0@[41120,41120,41120][0,0,0]
+@New coloring rule@osp.flags.rxdir==1@[58596,65535,60909][0,0,0]

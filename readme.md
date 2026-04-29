@@ -1,8 +1,8 @@
 ![OSP](extras/osp.jpg)
 # Open System Protocol (OSP) on Arduino
 
-Welcome to the landing page of the **aolibs** 
-(short for Arduino OSP libraries from ams-OSRAM) 
+Welcome to the [landing page](https://github.com/ams-OSRAM/OSP_aotop) 
+of the **aolibs** (short for Arduino OSP libraries from ams-OSRAM) 
 to be used with the **Arduino OSP evaluation kit**.
 
 
@@ -63,7 +63,9 @@ This section links to various resources.
 
   - [Getting started manual](gettingstarted.md);
 
-  - [Training slides and videos](extras/manuals/).
+  - [Training slides and videos, manuals, appnotes](extras/manuals/);
+  
+  - [OSPprobe](examples/ospprobe) network sniffer.
 
 - The [aolibs](https://github.com/orgs/ams-OSRAM/repositories?q=OSP_ao)
   (on the ams OSRAM GitHub [site](https://github.com/ams-OSRAM/)): 
@@ -85,7 +87,7 @@ This section links to various resources.
   - LEDs in the EVK
     - Top looker [E3323](https://ams-osram.com/products/leds/multi-color-leds/osram-osire-e3323-krtbdwlm31-32) product page (automotive ambient RGB);
     - Side looker [E5515](https://ams-osram.com/products/leds/multi-color-leds/osram-osire-e5515-krtbaelps1-32) product page (automotive interior RGB).
-  - Sensors in the EVK **new**
+  - Sensors in the EVK
     - Temperature sensor [AS6212](https://ams-osram.com/products/sensor-solutions/temperature-sensors/ams-as621x-temperature-sensors) product page (high accuracy digital I2C sensor);
     - Light sensor [SFH5721](https://ams-osram.com/products/sensor-solutions/ambient-light-color-spectral-proximity-sensors/osram-chip-led-sfh-5721) product page (ambient light and infrared I2C sensor);
     - Position sensor [AS5600](https://ams-osram.com/products/sensor-solutions/position-sensors/ams-as5600-position-sensor) product page (digital magnetic rotary position sensor).
@@ -95,8 +97,9 @@ This section links to various resources.
 
   - 1× OSP32 ([schematics](extras/schematics/OSP32_complete_v11.pdf)): root MCU board with an ESP32 (flashed with the [saidbasic](examples/saidbasic) demo), two SAIDs, and an I2C EEPROM (not flashed);
   - 1× SAIDbasic ([schematics](extras/schematics/SAIDbasic_complete_v8.pdf)): demo board with 3 SAID and 4 RGBIs, I/O-expander and I2C EEPROM flashed with [rainbow](examples/eepromflasher) script;
-  - 1× SAIDsense **new** ([schematics](todo)): demo board with 3 sensors, a selector and a display;
+  - 1× SAIDsense ([schematics](extras/schematics/SAIDSense_v6.pdf)): demo board with 3 sensors, a selector and a display;
   - 1× RGBIstrip ([schematics](extras/schematics/OSIRE_E3731i_V2.3.pdf)): demo board with 20 RGBIs;
+    ⚠️**WARNING**⚠️ New RGBI strips have integrated terminator, see ([schematics](extras/schematics/OSIRE_E3731i_V2.3.pdf)) for details.
   - 1× SAIDlooker ([schematics](extras/schematics/SAIDLooker_complete_v4.pdf)): demo board with 3 SAIDs;
   - 2× Terminator ([schematics](extras/schematics/Terminator_complete_v3.pdf));
   - 2× EEPROM stick ([schematics](extras/schematics/I2CEEPROMstick-schematics_v2.pdf)): EEPROMs flashed with respectively the [bouncingblock](examples/eepromflasher) and [colormix](examples/eepromflasher) script;
@@ -168,6 +171,11 @@ You can find them in the Arduino IDE via
   [`aocmd/python`](https://github.com/ams-OSRAM/OSP_aocmd/tree/main/python), 
   that sends commands to the `osplink` application.
 
+- **ospprobe** ([source](examples/ospprobe))  
+  This firmware is not for OSP32, but for a dedicated board "OSPprobe"
+  (ESP32S3, OLED, levelshifter, buttons, leds, 2×ERNI).
+  It implements and OSP telegram probe (network snooper, sniffer).
+
 - **evktester** ([source](examples/evktester))  
   This application helps in testing the hardware components in the EVK.
   It requires (human) operator support (via OLED and buttons).
@@ -194,6 +202,19 @@ which identifies the version of this "library".
 
 ## Version history _aotop_
 
+- **2026 April 29, 0.6.0**
+  - The OSP network sniffer _OSPprobe_ has been added (firmware in `examples`, PCB in `extras/schematics`).
+  - Small updates to training slides (branching rule, OTP burn); added (refs) to other manuals.
+  - User manuals for SAIDbasic and SAIDdemo updated.
+  - Added link to application notes.
+  - Added `SAIDSense_v6` schematics and layout.
+  - Updated SAIDsense test cases in `evktester.ino`.
+  - Versions printout now separated with `,` in demos.
+  - Comments updates in `saidbasic.ino`, `saiddemo.ino`, and `osplink.ino`.
+  - Added warning for RGBIstrip (built-in terminator).
+  - Switched to latest latest Arduino IDE (2.3.8) and the latest ESP32 board package (3.3.8).
+  - Updated to `readme.md`.
+  
 - **2025 September 17, 0.5.0**
   - Added `saiddemo.ino` application (with user manual) using the new SAIDsense demo board.
   - Added SAIDsense board to EVK; also to Training, Schematics, and Getting Started.

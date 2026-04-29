@@ -437,8 +437,8 @@ static report_t run_senled() {
   // (2) setup driver iox4b4l and sseg
   result= aoosp_exec_i2cpower(TESTTOPO2_SAIDSENSE_SAIDI2C_ADDR); CHECKRESULT("i2c.power %d/%s\n",result,aoresult_to_str(result));
   // selector
-  result= aomw_iox4b4l_present(TESTTOPO2_SAIDSENSE_SAIDI2C_ADDR,AOMW_IOX4B4L_DADDR7_SAIDSENSEV2); CHECKRESULT("iox4b4l_present(%03X) %d/%s\n",TESTTOPO2_SAIDSENSE_SAIDI2C_ADDR,result,aoresult_to_str(result));
-  result= aomw_iox4b4l_init(TESTTOPO2_SAIDSENSE_SAIDI2C_ADDR, AOMW_IOX4B4L_DADDR7_SAIDSENSEV2, AOMW_IOX4B4L_PINCFG_SAIDSENSEV2); CHECKRESULT("iox4b4l_init %d/%s\n",result,aoresult_to_str(result));
+  result= aomw_iox4b4l_present(TESTTOPO2_SAIDSENSE_SAIDI2C_ADDR,AOMW_IOX4B4L_DADDR7_SAIDSENSE); CHECKRESULT("iox4b4l_present(%03X) %d/%s\n",TESTTOPO2_SAIDSENSE_SAIDI2C_ADDR,result,aoresult_to_str(result));
+  result= aomw_iox4b4l_init(TESTTOPO2_SAIDSENSE_SAIDI2C_ADDR, AOMW_IOX4B4L_DADDR7_SAIDSENSE, AOMW_IOX4B4L_PINCFG_SAIDSENSE); CHECKRESULT("iox4b4l_init %d/%s\n",result,aoresult_to_str(result));
   // sseg
   result= aomw_sseg_present(TESTTOPO2_SAIDSENSE_SAIDI2C_ADDR); CHECKRESULT("aomw_sseg_present(%03X) %d/%s\n",TESTTOPO2_SAIDSENSE_SAIDI2C_ADDR,result,aoresult_to_str(result));
   result= aomw_sseg_init(TESTTOPO2_SAIDSENSE_SAIDI2C_ADDR); CHECKRESULT("aomw_sseg_init %d/%s\n",result,aoresult_to_str(result));
@@ -493,8 +493,8 @@ static report_t run_sensen() {
   // (2) setup drivers
   result= aoosp_exec_i2cpower(TESTTOPO2_SAIDSENSE_SAIDI2C_ADDR); CHECKRESULT("i2cpower %d/%s\n",result,aoresult_to_str(result));
   // selector
-  result= aomw_iox4b4l_present(TESTTOPO2_SAIDSENSE_SAIDI2C_ADDR,AOMW_IOX4B4L_DADDR7_SAIDSENSEV2); CHECKRESULT("iox4b4l_present(%03X) %d/%s\n",TESTTOPO2_SAIDSENSE_SAIDI2C_ADDR,result,aoresult_to_str(result));
-  result= aomw_iox4b4l_init(TESTTOPO2_SAIDSENSE_SAIDI2C_ADDR, AOMW_IOX4B4L_DADDR7_SAIDSENSEV2, AOMW_IOX4B4L_PINCFG_SAIDSENSEV2); CHECKRESULT("iox4b4l_init %d/%s\n",result,aoresult_to_str(result));
+  result= aomw_iox4b4l_present(TESTTOPO2_SAIDSENSE_SAIDI2C_ADDR,AOMW_IOX4B4L_DADDR7_SAIDSENSE); CHECKRESULT("iox4b4l_present(%03X) %d/%s\n",TESTTOPO2_SAIDSENSE_SAIDI2C_ADDR,result,aoresult_to_str(result));
+  result= aomw_iox4b4l_init(TESTTOPO2_SAIDSENSE_SAIDI2C_ADDR, AOMW_IOX4B4L_DADDR7_SAIDSENSE, AOMW_IOX4B4L_PINCFG_SAIDSENSE); CHECKRESULT("iox4b4l_init %d/%s\n",result,aoresult_to_str(result));
   // temperature
   result= aomw_as6212_present(TESTTOPO2_SAIDSENSE_SAIDI2C_ADDR); CHECKRESULT("aomw_as6212_present(%03X) %d/%s\n",TESTTOPO2_SAIDSENSE_SAIDI2C_ADDR,result,aoresult_to_str(result));
   result= aomw_as6212_init(TESTTOPO2_SAIDSENSE_SAIDI2C_ADDR); CHECKRESULT("aomw_as6212_init %d/%s\n",result,aoresult_to_str(result));

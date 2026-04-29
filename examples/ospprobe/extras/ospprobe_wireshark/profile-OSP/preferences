@@ -1,0 +1,32 @@
+# Configuration file for Wireshark 4.6.3.
+#
+# This file is regenerated each time preferences are saved within
+# Wireshark. Making manual changes should be safe, however.
+# Preferences that have been commented out have not been
+# changed from their default value.
+
+# To reduce file size, most commented lines have been removed 
+
+####### User Interface: Columns ########
+
+# Packet list column format
+# Each pair of strings consists of a column title and its format
+gui.column.format: 
+	"No.", "%m",
+	"Time", "%t",
+	"Deltatime", "%Tt",
+	"Flags", "%Cus:osp.flags:0:U",
+	"Dir", "%Cus:osp.flags.rxdir:0:R",
+	"Source", "%s",
+	"Destination", "%d",
+	"TID", "%Cus:osp.header.tid:0:U",
+	"PS", "%Cus:len(osp.payload):0:U",
+	"Info", "%i"
+
+####### User Interface: Font ########
+
+# Font name for packet list, protocol tree, and hex dump panes. (Qt)
+# A string
+gui.qt.font_name: Consolas,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+
+

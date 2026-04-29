@@ -1,6 +1,6 @@
-// aotop.h - empty library
+// osprmt.h - header for capture OSP telegram timings using the RMT (Remote Control) block of the ESP32
 /*****************************************************************************
- * Copyright 2024-2026 by ams OSRAM AG                                       *
+ * Copyright 2026 by ams OSRAM AG                                            *
  * All rights are reserved.                                                  *
  *                                                                           *
  * IMPORTANT - PLEASE READ CAREFULLY BEFORE COPYING, INSTALLING OR USING     *
@@ -18,14 +18,33 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE     *
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.      *
  *****************************************************************************/
-#ifndef _AOTOP_H_
-#define _AOTOP_H_
+#ifndef _OSPRMT_H_
+#define _OSPRMT_H_
 
 
-// Identifies lib version
-#define AOTOP_VERSION "0.6.0"
+#include "manc.h"                        // manc_result_t 
 
-// This lib does not contain reusable code, only examples and documentation.
+
+#define OSPRMT_MAX_BYTES   12            // OSP telegram has max 12 bytes, want to take some margin, but RMT does not have more space
+
+
+typedef struct osprmt_decodedtele_s {
+  uint32_t      timestamp_us;            // Timestamp of reception based on micros()
+  uint32_t      seqnum;                  // Sequence number; skips when there was a "buffer overflow" (all rawteles[] were in use)
+  uint8_t       dir_tx;                  // Captured command telegramn on tx line (1) or response telegram on rx line (0)
+  uint8_t       bytes[OSPRMT_MAX_BYTES]; // Decoded bytes of the telegram
+  int           bytecount;               // Number of bytes in the decoded telegram bytes[]
+  manc_result_t decoderesult;            // Was decoding succesful?
+} osprmt_decodedtele_t;
+
+
+void osprmt_init();
+void osprmt_start();
+int  osprmt_poll(osprmt_decodedtele_t*tele);
+
+
+int osprmt_queue_free_count();
+int osprmt_queue_work_count();
+
 
 #endif
-

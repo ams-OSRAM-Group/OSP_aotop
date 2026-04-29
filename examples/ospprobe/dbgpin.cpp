@@ -1,6 +1,6 @@
-// aotop.h - empty library
+// dbgpin.cpp - header for debug & trace pins (to connect to logic analyzer to measure time on cores 0 and 1)
 /*****************************************************************************
- * Copyright 2024-2026 by ams OSRAM AG                                       *
+ * Copyright 2026 by ams OSRAM AG                                            *
  * All rights are reserved.                                                  *
  *                                                                           *
  * IMPORTANT - PLEASE READ CAREFULLY BEFORE COPYING, INSTALLING OR USING     *
@@ -18,14 +18,20 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE     *
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.      *
  *****************************************************************************/
-#ifndef _AOTOP_H_
-#define _AOTOP_H_
 
 
-// Identifies lib version
-#define AOTOP_VERSION "0.6.0"
+#include <Arduino.h>           // eg for Serial
+#include "dbgpin.h"            // self 
 
-// This lib does not contain reusable code, only examples and documentation.
 
-#endif
+// Initialization of the debug & trace pins
+void dbgpin_init() {
+  pinMode(DBGPIN_0_PIN, OUTPUT);
+  dbgpin_0_lo();
+  pinMode(DBGPIN_1_PIN, OUTPUT);
+  dbgpin_1_lo();
+  
+  Serial.printf("dbgpin: init\n");
+}
+
 

@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright 2024 by ams OSRAM AG                                            *
+ * Copyright 2024-2026 by ams OSRAM AG                                       *
  * All rights are reserved.                                                  *
  *                                                                           *
  * IMPORTANT - PLEASE READ CAREFULLY BEFORE COPYING, INSTALLING OR USING     *
