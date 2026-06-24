@@ -202,6 +202,14 @@ which identifies the version of this "library".
 
 ## Version history _aotop_
 
+- **2026 June 24, 0.7.0**
+  - The evktester now has walking LEDs for the 7 segment display and timeout reset after user action.
+  - Textual improvements in the documentation of OSPprobe.
+  - Switched to latest Arduino IDE (2.3.10) and the latest ESP32 board package (3.3.10).
+  - SAIDSense v6 schematics update - missing 7-seg image.
+  - Corrected casing of SAIDSense board links (in schematics).
+  - Added OSP32 v12 schematics.
+  
 - **2026 April 29, 0.6.0**
   - The OSP network sniffer _OSPprobe_ has been added (firmware in `examples`, PCB in `extras/schematics`).
   - Small updates to training slides (branching rule, OTP burn); added (refs) to other manuals.
@@ -212,7 +220,7 @@ which identifies the version of this "library".
   - Versions printout now separated with `,` in demos.
   - Comments updates in `saidbasic.ino`, `saiddemo.ino`, and `osplink.ino`.
   - Added warning for RGBIstrip (built-in terminator).
-  - Switched to latest latest Arduino IDE (2.3.8) and the latest ESP32 board package (3.3.8).
+  - Switched to latest Arduino IDE (2.3.8) and the latest ESP32 board package (3.3.8).
   - Updated to `readme.md`.
   
 - **2025 September 17, 0.5.0**
@@ -245,7 +253,7 @@ which identifies the version of this "library".
   - Several text updates in `gettingstarted.md`.
   - Added details to [SAIDbasic user manual](extras/manuals/saidbasic.pdf)
   - Added reference to `aospi_bringup`.
-  - Switched to latest latest Arduino IDE (2.3.6) and the latest ESP32 board package (3.2.0) - applied a patch to `aospi/src/slave`.
+  - Switched to latest Arduino IDE (2.3.6) and the latest ESP32 board package (3.2.0) - applied a patch to `aospi/src/slave`.
   - Corrected pptx links to pdf.
   - Textual updates in training 3 (OTP burn).
   - Fixed link in `extras/manuals` for `saidbasic.ino`.

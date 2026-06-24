@@ -23,7 +23,7 @@
 
 
 // Identifies lib version
-#define AOTOP_VERSION "0.6.0"
+#define AOTOP_VERSION "0.7.0"
 
 // This lib does not contain reusable code, only examples and documentation.
 

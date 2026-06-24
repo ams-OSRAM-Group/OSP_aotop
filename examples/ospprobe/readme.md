@@ -195,8 +195,8 @@ both the TX as well as the RX line.
 > RX is for receiving responses upstream.
 
 Since OSPprobe could also be flipped 180 degrees, these terms are not absolute.
-TX is about telegrams coming in via the ERNI connector at the back (left) and
-RX is about telegrams coming in via the ERNI connector at the from (right) of 
+TX is about telegrams coming in via the ERNI connector at the back (normally the one on the left side) and
+RX is about telegrams coming in via the ERNI connector at the front (normally the one in the right side) of 
 the OSPprobe PCB.
 
 The probe is _powered_ by the OSP bus. Optionally, the probe can also be 
@@ -327,8 +327,14 @@ In the Load mode, the OLED shows the load of the OSP bus
 (top center in % with label "load"). Bus load is defined as the 
 number of (micro)seconds the bus is busy per elapsed (micro)second. 
 The bus is busy when telegram bits are present; but also an 
-idle-gap of 8 µs per telegram is accounted as busy. The Load screen 
-also shows the TX and RX sequence number; the TX sequence number is 
+idle-gap of 8 µs per telegram is accounted as busy. 
+
+OSPload assigns a sequence number (stepping integer) to every 
+_captured_ telegram. When a telegram is captured but there is a 
+queue overflow or decoding fails it still gets a fresh sequence number.
+The TX and RX lines have independent sequence numbers.
+
+The Load screen shows the TX and RX sequence number; the TX sequence number is 
 on the left (labeled `t`), the RX one on the right (labeled `r`). 
 Pressing the ZERO button zeros both sequence numbers (just in the UI). 
 Pressing the NEXT button has no effect in the Load mode.
@@ -351,9 +357,9 @@ Pressing the NEXT button has no effect in the Statistics mode.
 
 ### Telegrams mode 
 
-In the Telegrams mode, the OLED shows up to 30 captured telegrams. 
-The ZERO buttons clears the list, but it will be filled with new telegrams 
-once they are captured. 
+In the Telegrams mode OSPprobe stores up to 30 captured telegrams. 
+The can be viewed on the OLED screen. The ZERO buttons clears the list, 
+but it will be filled with new telegrams once they are captured. 
 The list is made up of 6 pages as indicated by the scroll bar on the right. 
 To cycle through the pages use the NEXT button. 
 
@@ -407,13 +413,13 @@ OSPprobe. This is what the Wireshark (extcap) does.
 - The next 4 nibbles are the lower nibbles of the sequence number.
 - Next is the tag, also here `T`, `R`, `t`, or `r` with the same meaning
   as in Telegrams mode.
-- Then up two twelve bytes in hex nibbles (no spaces) and finally a linefeed.
 - If the _tag_ is `t` or `r` (lowercase) this indicates a decoding 
   error happened. The rest of the line gives the error code in 8 nibbles
   (see `manc.h` for values and meaning). Eight nibbles is overkill, but this
   matches the length of the shortest allowed telegram, hopefully causing less
   anomalies in further processing.
-- The line is terminated with a <LF> (character 10).
+- Then up two twelve bytes in hex nibbles (no spaces).
+- The line is terminated with a linefeed (character 10).
 - See the next section for how to use Wireshark to process the USB data.
 
 ![Screenshot USB Serial mode](extras/screenshot-usbserial.jpg)

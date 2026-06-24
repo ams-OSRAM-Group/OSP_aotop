@@ -1,6 +1,6 @@
 // cases.cpp - testcases for evktester
 /*****************************************************************************
- * Copyright 2025 by ams OSRAM AG                                            *
+ * Copyright 2025,2026 by ams OSRAM AG                                       *
  * All rights are reserved.                                                  *
  *                                                                           *
  * IMPORTANT - PLEASE READ CAREFULLY BEFORE COPYING, INSTALLING OR USING     *
@@ -278,7 +278,7 @@ static report_t run_osp32i2c() {
     result= aoosp_send_readi2ccfg(TESTTOPO1_OSP32_SAIDOUT_ADDR, &flags, &speed ); CHECKRESULT("readi2ccfg %d/%s\n",result,aoresult_to_str(result));
     prvstate= curstate;
     curstate= flags & AOOSP_I2CCFG_FLAGS_INT;
-    if( !prvstate && curstate ) { aoui32_led_toggle(AOUI32_LED_GRN); INT++; }
+    if( !prvstate && curstate ) { aoui32_led_toggle(AOUI32_LED_GRN); INT++; now=millis(); }
 
     if( millis()-now > REPORT_TIMEOUT_MS ) report= report_timeout;
     if( INT>=2 ) report=report_success;
@@ -389,10 +389,10 @@ static report_t run_ioxbut() {
     result= aomw_iox4b4l_but_scan(); CHECKRESULT("aomw_iox4b4l_but_scan %d/%s\n",result,aoresult_to_str(result));
     // test keys
     uint8_t newled=0;
-    if( aomw_iox4b4l_but_wentdown(AOMW_IOX4B4L_LED0) ) { b0++; newled|=AOMW_IOX4B4L_LED0; }
-    if( aomw_iox4b4l_but_wentdown(AOMW_IOX4B4L_LED1) ) { b1++; newled|=AOMW_IOX4B4L_LED1; }
-    if( aomw_iox4b4l_but_wentdown(AOMW_IOX4B4L_LED2) ) { b2++; newled|=AOMW_IOX4B4L_LED2; }
-    if( aomw_iox4b4l_but_wentdown(AOMW_IOX4B4L_LED3) ) { b3++; newled|=AOMW_IOX4B4L_LED3; }
+    if( aomw_iox4b4l_but_wentdown(AOMW_IOX4B4L_LED0) ) { b0++; newled|=AOMW_IOX4B4L_LED0; now=millis(); }
+    if( aomw_iox4b4l_but_wentdown(AOMW_IOX4B4L_LED1) ) { b1++; newled|=AOMW_IOX4B4L_LED1; now=millis(); }
+    if( aomw_iox4b4l_but_wentdown(AOMW_IOX4B4L_LED2) ) { b2++; newled|=AOMW_IOX4B4L_LED2; now=millis(); }
+    if( aomw_iox4b4l_but_wentdown(AOMW_IOX4B4L_LED3) ) { b3++; newled|=AOMW_IOX4B4L_LED3; now=millis(); }
     // update indicator led
     if( newled!= 0 ) {
       result = aomw_iox4b4l_led_tgl(newled); CHECKRESULT("aomw_iox4b4l_led_tgl(2) %d/%s\n",result,aoresult_to_str(result));
@@ -444,6 +444,12 @@ static report_t run_senled() {
   result= aomw_sseg_init(TESTTOPO2_SAIDSENSE_SAIDI2C_ADDR); CHECKRESULT("aomw_sseg_init %d/%s\n",result,aoresult_to_str(result));
 
   // (3) Wait for operator report
+  uint8_t pattern1 = AOMW_SSEG_SEGA | AOMW_SSEG_SEGG | AOMW_SSEG_SEGD | AOMW_SSEG_SEGP ;
+  uint8_t pattern2 = AOMW_SSEG_SEGF | AOMW_SSEG_SEGB ;
+  uint8_t pattern3 = AOMW_SSEG_SEGE | AOMW_SSEG_SEGC ;
+  uint8_t patterns1[] = { pattern1, pattern1, pattern1, pattern1 };
+  uint8_t patterns2[] = { pattern2, pattern2, pattern2, pattern2 };
+  uint8_t patterns3[] = { pattern3, pattern3, pattern3, pattern3 };
   uint32_t toggle= millis();
   report_t report= report_running;
   int mode=0;
@@ -455,17 +461,18 @@ static report_t run_senled() {
         result= aoosp_send_setpwmchn(TESTTOPO2_SAIDSENSE_SAIDI2C_ADDR,0,0,0,0); CHECKRESULT("setpwmchn(0,off) %d/%s\n",result,aoresult_to_str(result));
         result= aoosp_send_setpwmchn(TESTTOPO2_SAIDSENSE_SAIDI2C_ADDR,1,0,0,0); CHECKRESULT("setpwmchn(1,off) %d/%s\n",result,aoresult_to_str(result));
         result = aomw_iox4b4l_led_on(AOMW_IOX4B4L_LEDALL); CHECKRESULT("aomw_iox4b4l_led_on %d/%s\n",result,aoresult_to_str(result));
+        result= aomw_sseg_set(patterns1); CHECKRESULT("aomw_sseg_set %d/%s\n",result,aoresult_to_str(result));
         mode=1;
       } else if( mode==1 ) {
         // sseg on
         result = aomw_iox4b4l_led_off(AOMW_IOX4B4L_LEDALL); CHECKRESULT("aomw_iox4b4l_led_of %d/%s\n",result,aoresult_to_str(result));
-        result = aomw_sseg_print("8.8.8.8."); CHECKRESULT("aomw_sseg_print %d/%s\n",result,aoresult_to_str(result));
+        result= aomw_sseg_set(patterns2); CHECKRESULT("aomw_sseg_set %d/%s\n",result,aoresult_to_str(result));
         mode=2;
       } else if( mode==2 ) {
         // toplookers on
-        result = aomw_sseg_print("    "); CHECKRESULT("aomw_sseg_print %d/%s\n",result,aoresult_to_str(result));
         result= aoosp_send_setpwmchn(TESTTOPO2_SAIDSENSE_SAIDI2C_ADDR,0,PWMLEVEL,PWMLEVEL,PWMLEVEL); CHECKRESULT("setpwmchn(0,on) %d/%s\n",result,aoresult_to_str(result));
         result= aoosp_send_setpwmchn(TESTTOPO2_SAIDSENSE_SAIDI2C_ADDR,1,PWMLEVEL,PWMLEVEL,PWMLEVEL); CHECKRESULT("setpwmchn(1,on) %d/%s\n",result,aoresult_to_str(result));
+        result= aomw_sseg_set(patterns3); CHECKRESULT("aomw_sseg_set %d/%s\n",result,aoresult_to_str(result));
         mode=0;
       }
       toggle= millis();
@@ -533,21 +540,21 @@ static report_t run_sensen() {
     result= aomw_iox4b4l_but_scan(); CHECKRESULT("aomw_iox4b4l_but_scan %d/%s\n",result,aoresult_to_str(result));
     // test keys
     uint8_t newled=0;
-    if( aomw_iox4b4l_but_wentdown(AOMW_IOX4B4L_LED0) ) { b0++; newled|=AOMW_IOX4B4L_LED0; }
-    if( aomw_iox4b4l_but_wentdown(AOMW_IOX4B4L_LED1) ) { b1++; newled|=AOMW_IOX4B4L_LED1; }
-    if( aomw_iox4b4l_but_wentdown(AOMW_IOX4B4L_LED2) ) { b2++; newled|=AOMW_IOX4B4L_LED2; }
-    if( aomw_iox4b4l_but_wentdown(AOMW_IOX4B4L_LED3) ) { b3++; newled|=AOMW_IOX4B4L_LED3; }
+    if( aomw_iox4b4l_but_wentdown(AOMW_IOX4B4L_LED0) ) { b0++; newled|=AOMW_IOX4B4L_LED0; now=millis(); }
+    if( aomw_iox4b4l_but_wentdown(AOMW_IOX4B4L_LED1) ) { b1++; newled|=AOMW_IOX4B4L_LED1; now=millis(); }
+    if( aomw_iox4b4l_but_wentdown(AOMW_IOX4B4L_LED2) ) { b2++; newled|=AOMW_IOX4B4L_LED2; now=millis(); }
+    if( aomw_iox4b4l_but_wentdown(AOMW_IOX4B4L_LED3) ) { b3++; newled|=AOMW_IOX4B4L_LED3; now=millis(); }
     // update indicator led
     if( newled!= 0 ) {
       result = aomw_iox4b4l_led_tgl(newled); CHECKRESULT("aomw_iox4b4l_led_tgl(2) %d/%s\n",result,aoresult_to_str(result));
     }
     // check sensors for sufficient change
     result= aomw_as6212_temp_get(&v); CHECKRESULT("aomw_as6212_temp_get %d/%s\n",result,aoresult_to_str(result));
-    if( abs(v-vt)>100 ) { vt=v; st++; }
+    if( abs(v-vt)>100 ) { vt=v; st++; now=millis(); }
     result= aomw_as5600_angle_get(&v); CHECKRESULT("aomw_as5600_angle_get %d/%s\n",result,aoresult_to_str(result));
-    if( abs(v-vr)>2000 ) { vr=v; sr++; }
+    if( abs(v-vr)>2000 ) { vr=v; sr++; now=millis(); }
     result= aomw_sfh5721_als_get(&v); CHECKRESULT("aomw_sfh5721_als_get %d/%s\n",result,aoresult_to_str(result));
-    if( abs(v-vl)>230 ) { vl=v; sl++; }
+    if( abs(v-vl)>230 ) { vl=v; sl++; now=millis(); }
     uint8_t sseg[] = { (uint8_t)(st==0?8:(st==1?64:1)), (uint8_t)(sr==0?8:(sr==1?64:1)), (uint8_t)(sl==0?8:(sl==1?64:1)), 0};
     result= aomw_sseg_set(sseg); CHECKRESULT("aomw_sseg_set %d/%s\n",result,aoresult_to_str(result));
     // end of test?
@@ -581,9 +588,9 @@ report_t cases_uibut(int tid, int exec) {
   report_t report= report_running;
   while( report==report_running ) { 
     aoui32_but_scan(); 
-    if( aoui32_but_wentdown(AOUI32_BUT_A) ) { aoui32_led_toggle(AOUI32_LED_GRN); A++; }
-    if( aoui32_but_wentdown(AOUI32_BUT_X) ) { aoui32_led_toggle(AOUI32_LED_RED); X++; }
-    if( aoui32_but_wentdown(AOUI32_BUT_Y) ) { aospi_outoena_set( !aospi_outoena_get() ); Y++; }
+    if( aoui32_but_wentdown(AOUI32_BUT_A) ) { aoui32_led_toggle(AOUI32_LED_GRN); A++; now=millis(); }
+    if( aoui32_but_wentdown(AOUI32_BUT_X) ) { aoui32_led_toggle(AOUI32_LED_RED); X++; now=millis(); }
+    if( aoui32_but_wentdown(AOUI32_BUT_Y) ) { aospi_outoena_set( !aospi_outoena_get() ); Y++; now=millis(); }
 
     if( millis()-now > REPORT_TIMEOUT_MS ) report= report_timeout;
     if( A>=2 && X>=2 && Y>=2 ) report=report_success;

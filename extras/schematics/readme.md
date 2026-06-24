@@ -7,7 +7,7 @@ Arduino OSP evaluation kit are available here.
 ## Eval kit boards
 
 - **OSP32**
-  [v11](OSP32_complete_v11.pdf), [v10](OSP32_complete_v10.pdf)
+  [v12](OSP32_complete_v12.pdf), [v11](OSP32_complete_v11.pdf), [v10](OSP32_complete_v10.pdf)
   
   ![OSP32](OSP32_complete_v11.png)
 
@@ -44,10 +44,10 @@ Arduino OSP evaluation kit are available here.
 
 ## Also available
 
-- **SAIDsense**
-  [v6](SAIDsense_v6.pdf) [v5](SAIDsense_v5.pdf) [v2](SAIDsense_v2.pdf) 
+- **SAIDSense**
+  [v6](SAIDSense_v6.pdf) [v5](SAIDSense_v5.pdf) [v2](SAIDSense_v2.pdf) 
   
-  ![SAIDsense](SAIDsense_v2.png)
+  ![SAIDSense](SAIDSense_v2.png)
 
 - **OSPprobe**
   [v3](OSPprobe_v3.pdf) (needs patch)

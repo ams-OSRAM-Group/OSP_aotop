@@ -1,6 +1,6 @@
 // evktester.h - test runner for EVK test cases
 /*****************************************************************************
- * Copyright 2025 by ams OSRAM AG                                            *
+ * Copyright 2025,2026 by ams OSRAM AG                                       *
  * All rights are reserved.                                                  *
  *                                                                           *
  * IMPORTANT - PLEASE READ CAREFULLY BEFORE COPYING, INSTALLING OR USING     *
@@ -23,7 +23,8 @@
 
 
 // Application version (and its history)
-#define EVKTESTER_VERSION "1.0"
+#define EVKTESTER_VERSION "1.1"
+// 20260527  1.1  senled has now walking leds; timeout resets after action
 // 20250808  1.0  Added SAIDsense test, updated SAIDbasic (new iox4b4l)
 // 20250325  0.7  Small typos fixed
 // 20250324  0.6  Added two line instruction at 0.start

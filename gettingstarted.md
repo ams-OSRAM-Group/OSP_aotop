@@ -348,11 +348,10 @@ There are several sources of documentation:
 ## Versions
 
 In general, take the latest greatest of all components. If there are 
-problems, these are the versions the _aolib_ developers used and tested
-(2025 March 28).
+problems, these are the versions the _aolib_ developers used and tested.
 
-- Arduino IDE 2.3.8.
-- Board manager "esp32 by Espressif Systems" 3.3.8.
+- Arduino IDE 2.3.10.
+- Board manager "esp32 by Espressif Systems" 3.3.10.
 - No external libraries are used.
 - As PCB the OSP32 v11, SAIDbasic v7, SAIDsense v5, and SAIDlooker v3.   
   Some SAIDs on the older boards are the v1.0 engineering samples 
@@ -362,7 +361,7 @@ problems, these are the versions the _aolib_ developers used and tested
 In Arduino, we have _File > Preferences > Compiler warnings > All_ to have the
 highest checking level during development. At the moment of writing this
 statement, a compile of e.g. SAIDdemo results in no errors and no warnings 
-in the aolibs (but there are some in the libs supplied by Espressif).
+in the _aolibs_ (but there are some in the libs supplied by Espressif).
 
 
 ## Which libraries to use
